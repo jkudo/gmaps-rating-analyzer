@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Google Map 口コミ評価アナライザー",
+  "version": "0.1.0",
+  "description": "Google マップの店舗ページから星ごとのクチコミ件数を読み取り、中央値・平均・分極化指数・不一致確率・エントロピー・双峰性係数や正規分布比較などをリアルタイム分析（計算は端末内）。任意でGeminiによる自然言語講評も追加できます（個人利用・自分のAPIキー）。",
+  "permissions": ["storage"],
+  "host_permissions": ["https://generativelanguage.googleapis.com/*", "https://api.openai.com/*"],
+  "background": { "service_worker": "background.js" },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.google.com/maps/*",
+        "https://www.google.co.jp/maps/*",
+        "https://maps.google.com/*",
+        "https://maps.google.co.jp/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "口コミ評価アナライザー",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}

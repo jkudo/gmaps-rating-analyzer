@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>口コミ評価アナライザー — 設定</title>
+<style>
+  :root { --bg:#ffffff; --soft:#f5f5f2; --text:#1b1b1a; --muted:#6c6c66; --border:rgba(0,0,0,0.12); --accent:#e6a23c; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1c1c1b; --soft:#262625; --text:#f2f2ef; --muted:#b3b3ad; --border:rgba(255,255,255,0.14); --accent:#e6a23c; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",sans-serif; font-size:14px; line-height:1.6; }
+  .wrap { max-width:560px; margin:0 auto; padding:28px 22px 40px; }
+  h1 { font-size:18px; font-weight:600; margin:0 0 4px; display:flex; align-items:center; gap:8px; }
+  h1 .s { color:var(--accent); }
+  .sub { color:var(--muted); font-size:12.5px; margin:0 0 22px; }
+  label.fld { display:block; font-size:12.5px; font-weight:600; margin:18px 0 6px; }
+  input[type=password], input[type=text], select { width:100%; height:38px; padding:0 11px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text); font-size:14px; font-family:inherit; }
+  select { height:40px; }
+  .hint { font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.5; }
+  .hint a { color:var(--accent); }
+  .check { display:flex; align-items:center; gap:9px; margin-top:20px; font-size:13px; font-weight:600; cursor:pointer; }
+  .check input { width:16px; height:16px; }
+  .row { display:flex; gap:9px; margin-top:22px; flex-wrap:wrap; }
+  button { border:1px solid var(--border); background:var(--soft); color:var(--text); cursor:pointer; padding:9px 14px; border-radius:9px; font-size:13px; font-family:inherit; }
+  button:hover { filter:brightness(0.97); }
+  button.primary { background:var(--accent); color:#1b1b1a; border-color:transparent; font-weight:600; }
+  .keyrow { display:flex; gap:8px; align-items:stretch; }
+  .keyrow input { flex:1; }
+  input.masked { -webkit-text-security: disc; text-security: disc; }
+  button.ghost { white-space:nowrap; padding:0 12px; background:transparent; }
+  #status { margin-top:14px; font-size:12.5px; color:var(--muted); min-height:18px; }
+  .note { margin-top:26px; padding:12px 14px; background:var(--soft); border-radius:10px; font-size:11.5px; color:var(--muted); line-height:1.6; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1><span class="s">&#9733;</span> <span data-ja="口コミ評価アナライザー — 設定" data-en="Review Rating Analyzer — Settings"></span></h1>
+    <p class="sub" data-ja="AI による「総合評価（解釈＋おすすめ度）」の生成に使う場合に設定します。未設定でもローカル分析と判定は動作します。" data-en="Configure this to generate the AI “Overall verdict (interpretation + recommendation)”. Local analysis and the verdict work even without a key."></p>
+
+    <label class="fld" for="uilang" data-ja="表示言語 / Language" data-en="Language / 表示言語"></label>
+    <select id="uilang">
+      <option value="auto" data-ja="自動（地図の言語に従う） / Auto" data-en="Auto (follow map language)"></option>
+      <option value="ja">日本語</option>
+      <option value="en">English</option>
+    </select>
+    <div class="hint" data-ja="パネルの文言とAIの総合評価の言語を切り替えます。「自動」はGoogleマップの表示言語（なければブラウザの言語）に従います。変更後はGoogleマップのタブを再読み込みすると確実です。" data-en="Switches the panel text and the AI verdict language. “Auto” follows Google Maps’ display language (or your browser’s). Reload the Maps tab after changing to be safe."></div>
+
+    <label class="fld" for="provider" data-ja="AIプロバイダ" data-en="AI provider"></label>
+    <select id="provider">
+      <option value="gemini">Google Gemini</option>
+      <option value="openai">OpenAI</option>
+    </select>
+    <div class="hint" data-ja="総合評価の生成に使うAIを選びます。選んだ側のAPIキーが必要です（任意）。" data-en="Choose which AI generates the verdict. The selected provider’s API key is required (optional feature)."></div>
+
+    <div id="geminiFields">
+      <label class="fld" for="key" data-ja="Gemini API キー" data-en="Gemini API key"></label>
+      <div class="keyrow">
+        <input id="key" type="text" class="masked" data-ja-ph="AIza... から始まるキー" data-en-ph="Key starting with AIza..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button type="button" id="toggleKey" class="ghost" data-ja="表示" data-en="Show"></button>
+      </div>
+      <div class="hint" data-ja-html='キーは <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> で無料発行できます。入力したキーはこの端末（ブラウザ）内にのみ保存され、Gemini API への呼び出し以外に送信しません。' data-en-html='Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>. Your key is stored only on this device (browser) and sent only to the Gemini API.'></div>
+
+      <label class="fld" for="model" data-ja="Gemini モデル" data-en="Gemini model"></label>
+      <select id="model">
+        <option value="gemini-3.5-flash" data-ja="gemini-3.5-flash（安定・推奨）" data-en="gemini-3.5-flash (stable, recommended)"></option>
+        <option value="gemini-3.1-flash-lite" data-ja="gemini-3.1-flash-lite（安定・最安/最速）" data-en="gemini-3.1-flash-lite (stable, cheapest/fastest)"></option>
+        <option value="gemini-flash-latest" data-ja="gemini-flash-latest（常に最新エイリアス）" data-en="gemini-flash-latest (always-latest alias)"></option>
+        <option value="gemini-2.5-flash" data-ja="gemini-2.5-flash（旧世代・フォールバック）" data-en="gemini-2.5-flash (older, fallback)"></option>
+        <option value="gemini-2.5-flash-lite" data-ja="gemini-2.5-flash-lite（旧世代）" data-en="gemini-2.5-flash-lite (older)"></option>
+      </select>
+      <div class="hint" data-ja-html='無料枠の有無や1日あたりの上限はモデルごとに異なります。最新は公式の <a href="https://ai.google.dev/gemini-api/docs/rate-limits" target="_blank" rel="noopener">Rate limits</a> ページで確認してください。' data-en-html='Free-tier availability and daily caps vary by model. See the official <a href="https://ai.google.dev/gemini-api/docs/rate-limits" target="_blank" rel="noopener">Rate limits</a> page for the latest.'></div>
+    </div>
+
+    <div id="openaiFields">
+      <label class="fld" for="okey" data-ja="OpenAI API キー" data-en="OpenAI API key"></label>
+      <div class="keyrow">
+        <input id="okey" type="text" class="masked" data-ja-ph="sk-... から始まるキー" data-en-ph="Key starting with sk-..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button type="button" id="toggleOkey" class="ghost" data-ja="表示" data-en="Show"></button>
+      </div>
+      <div class="hint" data-ja-html='キーは <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">OpenAI Platform</a> で発行できます。入力したキーはこの端末（ブラウザ）内にのみ保存され、OpenAI API への呼び出し以外に送信しません。OpenAIは無料枠がなく従量課金です。' data-en-html='Create a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">OpenAI Platform</a>. Your key is stored only on this device (browser) and sent only to the OpenAI API. OpenAI has no free tier (usage-based billing).'></div>
+
+      <label class="fld" for="omodel" data-ja="OpenAI モデル" data-en="OpenAI model"></label>
+      <select id="omodel">
+        <option value="gpt-5.4-mini" data-ja="gpt-5.4-mini（安価・高速・推奨）" data-en="gpt-5.4-mini (cheap, fast, recommended)"></option>
+        <option value="gpt-5.5" data-ja="gpt-5.5（最上位・高品質）" data-en="gpt-5.5 (top tier, highest quality)"></option>
+        <option value="gpt-5.4-nano" data-ja="gpt-5.4-nano（最安・最速）" data-en="gpt-5.4-nano (cheapest, fastest)"></option>
+        <option value="gpt-5" data-ja="gpt-5（旧フラッグシップ）" data-en="gpt-5 (previous flagship)"></option>
+        <option value="gpt-4o-mini" data-ja="gpt-4o-mini（旧世代・低価格）" data-en="gpt-4o-mini (older, low cost)"></option>
+      </select>
+      <div class="hint" data-ja-html='利用可能なモデルや料金は <a href="https://platform.openai.com/docs/models" target="_blank" rel="noopener">OpenAI のモデル一覧</a> で確認してください。一覧にないモデル名を使いたい場合は教えてください。' data-en-html='See the <a href="https://platform.openai.com/docs/models" target="_blank" rel="noopener">OpenAI models list</a> for available models and pricing. Tell us if you want a model not in this list.'></div>
+    </div>
+
+    <label class="check"><input type="checkbox" id="autoai"> <span data-ja="店舗を開いたとき自動でAIの総合評価を生成する" data-en="Auto-generate the AI verdict when a place opens"></span></label>
+    <div class="hint" data-ja="オフにすると、AIの総合評価はパネルの「AIで生成」を押したときだけ実行されます。同じ店舗の結果はセッション中キャッシュされ、再計算しません。" data-en="When off, the AI verdict runs only when you click “Generate with AI” in the panel. Results for the same place are cached during the session."></div>
+
+    <label class="check"><input type="checkbox" id="reviews"> <span data-ja="レビュー本文も解析する（表示中のレビューの一部をAIに送信）" data-en="Also analyze review text (sends some visible reviews to the AI)"></span></label>
+    <div class="hint" data-ja-html='オンにすると、ページに表示されているレビュー本文を（投稿者名なし・各300字程度・★が偏らないよう各評価から均等に）AIに送り、共通する称賛・不満の傾向を総合評価に反映します。<b>この場合のみ、他者のレビュー本文がAIプロバイダに送信されます</b>（無料枠ではモデル改善に使われる場合があります）。クチコミが表示された状態で使い、切り替え後は店舗ページを再読み込みするか「AIで生成」を押してください。' data-en-html='When on, visible review text (no author names, ~300 chars each, balanced across stars) is sent to the AI to reflect common praise/complaints in the verdict. <b>Only then is other people’s review text sent to the AI provider</b> (may be used for model improvement on free tiers). Use it with reviews visible; after toggling, reload the place page or click “Generate with AI”.'></div>
+
+    <div id="reviewCountWrap">
+      <label class="fld" for="reviewCount" data-ja="AIに送るレビュー件数（最大）" data-en="Reviews sent to AI (max)"></label>
+      <select id="reviewCount">
+        <option value="10" data-ja="10件（推奨・低コスト）" data-en="10 (recommended, low cost)"></option>
+        <option value="15" data-ja="15件（バランス）" data-en="15 (balanced)"></option>
+        <option value="20" data-ja="20件（傾向重視・送信量と費用が増加）" data-en="20 (more signal; more data sent & higher cost)"></option>
+      </select>
+      <div class="hint" data-ja="数値（平均・二極化・信頼性など）の分析は全件のヒストグラムに基づくため、この件数では変わりません。件数が増えると低評価の傾向を拾いやすくなりますが、送信トークン・費用・生成時間が増えます。表示中のレビューがこの件数より少ない場合は、読み込まれている分だけが対象です。" data-en="The numeric analysis (mean, polarization, reliability, etc.) is based on the full histogram and does not change with this count. A higher count captures low-rating themes better but increases tokens, cost and latency. If fewer reviews are loaded than this count, only the loaded ones are used."></div>
+    </div>
+
+    <div class="note" data-ja-html='⚠️ <b>超分析</b>（パネルの「🔬 超分析」）について：表示中のレビューを可能な限り全件読み込み、その本文（最大100件・各300字程度）をまとめてAIに送って分析します。通常の総合評価より<b>送信トークン・費用・生成時間が大幅に増えます</b>（特に OpenAI など従量課金では費用がかさみます）。レビュー件数の多い店舗ほど顕著です。コストが気になる場合は通常の総合評価をご利用ください。' data-en-html='⚠️ About <b>Deep analysis</b> (the panel’s “🔬 Deep analysis”): it loads as many of the currently shown reviews as possible and sends their text (up to ~100 items, ~300 chars each) to the AI in one go. This uses <b>far more tokens, cost and time</b> than the normal verdict (especially on usage-based providers like OpenAI). The effect is larger for places with many reviews. If cost is a concern, use the normal verdict instead.'></div>
+
+    <div class="row">
+      <button type="button" class="primary" id="save" data-ja="保存" data-en="Save"></button>
+      <button type="button" id="test" data-ja="接続テスト" data-en="Test connection"></button>
+      <button type="button" id="clear" data-ja="キーを削除" data-en="Delete key"></button>
+    </div>
+    <div id="status"></div>
+
+    <div class="note" data-ja-html='注意：この拡張は「配布せず、個人利用」を前提にキーをローカル保存しています。第三者に拡張ファイルごと渡すとキーが漏れます。<br>また Gemini の無料枠では、送信したプロンプトがモデル改善に利用される場合があります（有料・Vertex AI は対象外）。通常は星評価の集計値と統計指標のみを送り、店舗名は送りません。上の「レビュー本文も解析する」をオンにしたときに限り、表示中レビューの本文の一部（投稿者名なし）も送信します。' data-en-html='Note: this extension stores your key locally and is meant for personal use, not distribution. Sharing the extension folder with others exposes your key.<br>On Gemini’s free tier, submitted prompts may be used for model improvement (paid / Vertex AI excluded). Normally only the aggregated star counts and statistics are sent — not the place name. Only when “Also analyze review text” above is on is some visible review text (no author names) also sent.'></div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>
